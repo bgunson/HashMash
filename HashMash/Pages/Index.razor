@@ -70,7 +70,7 @@
 
     private bool[] algSelection = { false, false, false };
     private string password = "";
-    private Hasher hasher = new Hasher();
+    //private Hasher hasher = new Hasher();
     private string hashed0 = "";
     private string hashed1 = "";
     private string hashed2 = "";
@@ -78,9 +78,9 @@
     public void InputChanged(string value)
     {
         this.password = value;
-        this.hashed0 = hasher.HashPassword(value, 0);
-        this.hashed1 = hasher.HashPassword(value, 1);
-        this.hashed2 = hasher.HashPassword(value, 2);
+        //this.hashed0 = hasher.HashPassword(value, 0);
+        //this.hashed1 = hasher.HashPassword(value, 1);
+        //this.hashed2 = hasher.HashPassword(value, 2);
     }
 
     public void ToggleAlgSelection(int index)
