@@ -1,6 +1,9 @@
 ﻿@page "/"
+@using System.Security.Cryptography
+@using System.Text
+@using System.IO
 
-<div class="container justify-content-center text-center">
+<div class="container-fluid justify-content-center text-center">
 
     <div id="hash-input-row" class="container-widget mx-auto">
         
@@ -70,7 +73,6 @@
 
     private bool[] algSelection = { false, false, false };
     private string password = "";
-    //private Hasher hasher = new Hasher();
     private string hashed0 = "";
     private string hashed1 = "";
     private string hashed2 = "";
@@ -78,9 +80,12 @@
     public void InputChanged(string value)
     {
         this.password = value;
-        //this.hashed0 = hasher.HashPassword(value, 0);
-        //this.hashed1 = hasher.HashPassword(value, 1);
-        //this.hashed2 = hasher.HashPassword(value, 2);
+
+        byte[] data = Encoding.ASCII.GetBytes(password);
+        this.hashed0 = Convert.ToBase64String(SHA1.HashData(data));
+        this.hashed1 = Convert.ToBase64String(SHA256.HashData(data));
+        this.hashed2 = Convert.ToBase64String(SHA512.HashData(data));
+        
     }
 
     public void ToggleAlgSelection(int index)
