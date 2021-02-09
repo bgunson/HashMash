@@ -1,3 +1,5 @@
+# Source: https://www.meziantou.net/publishing-a-blazor-webassembly-application-to-github-pages.htm
+
 name: 'Publish application'
 on: push
 
