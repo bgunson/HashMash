@@ -13,8 +13,11 @@ When testing/building the application with VS, be sure of the following in _wwwr
 
         <html>
           <head>
+            ...
             <base href="/" />
+            ...
           </head>
+          ...
 
 ##### When Deploying to GitHub Pages
 When a new version is to be pushed to the site, make sure the workflow under _Actions_ is enabled, then
@@ -22,8 +25,11 @@ When a new version is to be pushed to the site, make sure the workflow under _Ac
 
         <html>
           <head>
+            ...
             <base href="/HashMash" />
+            ...
           </head>
+          ...
           
  The workflow cannot successfully build if the base url is not "/HashMash" since the Pages site is within a sub repo.
  ___
