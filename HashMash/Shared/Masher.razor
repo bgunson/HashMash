@@ -1,0 +1,120 @@
+﻿
+<input @bind-value="@inputValue" @oninput="(EventArgs) => {inputChanged(EventArgs.Value.ToString());}" type="text" placeholder="Type something..." onfocus="this.placeholder=''" maxlength="16" autofocus />
+
+<hr />
+
+<p>Total Clicks: @totalCount</p>
+<h6>Level: @currentLevel</h6>
+<h5>Level Clicks: @levelCount</h5>
+
+<div class="col" style="padding-bottom: 10px;">
+    <button type="button" @onclick="increment" class="btn btn-outline-success">Mash</button>
+    <button type="button" @onclick="reset" class="btn btn-outline-danger">Reset</button>
+</div>
+
+
+
+<div class="col">
+
+    <table class="table">
+
+        <thead>
+            <tr>
+                @if (inputValue != "")
+                {
+                    @:<th scope="col">Input</th>
+                }
+                @foreach (var c in inputValue)
+                {
+                    <th scope="col">@c<small> + @levelCount</small></th>
+                }
+            </tr>
+
+        </thead>
+        <tbody>
+
+            <tr>
+                @if (inputValue != "")
+                {
+                    <th scope="row">Decimal</th>
+                }
+                @foreach (char c in inputValue)
+                {
+                    <td>@Convert.ToString(c + levelCount, 10)</td>
+                }
+            </tr>
+
+            <tr>
+                @if (inputValue != "")
+                {
+                    <th scope="row">Binary</th>
+                }
+                @foreach (char c in inputValue)
+                {
+                    <td>@Convert.ToString(c + levelCount, 2)</td>
+                }
+            </tr>
+
+            <tr>
+                @if (inputValue != "")
+                {
+                    <th scope="row">Hexadecimal</th>
+                }
+                @foreach (char c in inputValue)
+                {
+                    <td>@Convert.ToString(c + levelCount, 16)</td>
+                }
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+@if (inputValue != "")
+{
+    <h4>Hash Digest:</h4>
+    <h5>@mashInput()</h5>
+}
+
+
+
+
+@code {
+
+    private string inputValue = "";
+
+    void inputChanged(string value)
+    {
+        this.inputValue = value;
+
+    }
+
+    public string getDecimalCh(char c)
+    {
+        int decimalCh = (int)c;
+        return decimalCh + "";
+    }
+
+    public string mashInput()
+    {
+        string mashed = "";
+        foreach (char c in this.inputValue)
+        {
+            mashed += Convert.ToString(c + levelCount, 16);
+        }
+        return mashed;
+    }
+
+    public void resetState()
+    {
+        // Maybe show warning popup here before resetting
+
+        reset();            // Reset the current masher
+        inputValue = "";    // Reset the input
+
+    }
+
+}
