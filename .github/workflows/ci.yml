@@ -35,4 +35,4 @@ jobs:
           force_orphan: true
       # changes the base-tag in index.html from '/' to '/HashMash/' to match GitHub Pages repository subdirectory
       - name: Change base-tag in index.html from / to /HashMash/
-        run: sed -i 's/<base href="\/" \/>/<base href="\/HashMash\/" \/>/g' release/wwwroot/index.html
+        run: sed -i 's/<base href="\/" \/>/<base href="\/HashMash\/" \/>/g' HashMash/bin/Release/net5.0/publish/index.html
