@@ -21,12 +21,12 @@ When testing/building the application with VS, be sure of the following in _wwwr
 
 ##### When Deploying to GitHub Pages
 When a new version is to be pushed to the site, make sure the workflow under _Actions_ is enabled, then
-- Open _wwwroot/index.html_ and assert that the base url within the _head_ is "/HashMash" on the _main_ branch  
+- Open _wwwroot/index.html_ and assert that the base url within the _head_ is "/HashMash/" on the _main_ branch  
 
         <html>
           <head>
             ...
-            <base href="https://bgunson.github.io/HashMash/" />
+            <base href="/HashMash/" />
             ...
           </head>
           ...
