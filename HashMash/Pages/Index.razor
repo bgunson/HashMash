@@ -6,41 +6,14 @@
 <div class="container-fluid justify-content-center text-center">
 
     <h2>HashMash!</h2>
-    <p>Input something and start clicking!</p>
+    <p>Input something and start clicking</p>
 
-    <div id="hash-input-row" class="container-widget mx-auto">
-        
-            <input id="hash-input" @oninput="(EventArgs) => {InputChanged(EventArgs.Value.ToString());}" type="text" placeholder="Type something..." onfocus="this.placeholder=''" maxlength="20" />
-        
-    </div>
+    <Masher></Masher>
     
 
 </div>
 
 @code {
-
-    private bool[] algSelection = { false, false, false };
-    private string password = "";
-    private string hashed0 = "";
-    private string hashed1 = "";
-    private string hashed2 = "";
-
-    public void InputChanged(string value)
-    {
-        this.password = value;
-
-        byte[] data = Encoding.ASCII.GetBytes(password);
-        this.hashed0 = Convert.ToBase64String(SHA1.HashData(data));
-        this.hashed1 = Convert.ToBase64String(SHA256.HashData(data));
-        this.hashed2 = Convert.ToBase64String(SHA512.HashData(data));
-        
-    }
-
-    public void ToggleAlgSelection(int index)
-    {
-        algSelection[index] = !algSelection[index];
-    }
-
 
 
 

@@ -52,7 +52,6 @@ a, .btn-link {
 #hash-input {
     text-align: center;
     background-color: transparent;
-    border: 0;
     font-size: 2vw;
     outline: none;
     transition: 0.3s;
@@ -69,30 +68,3 @@ a, .btn-link {
     }
 }
 
-
-/*#hash-input:focus {
-    font-size: 30px;
-    width: auto;
-    border-bottom: none;
-    transition: 0.3s;
-}
-
-#hash-input::placeholder {
-    font-size: 30px;
-}
-
-#hash-input:focus::placeholder {
-    font-size: 20px;
-    text-align: right;
-    transition: 0.3s;
-}
-*/
-.container-widget {
-    border: 2px solid purple;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 5px;
-    box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.56);
-    -webkit-box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.56);
-    -moz-box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.56);
-}
