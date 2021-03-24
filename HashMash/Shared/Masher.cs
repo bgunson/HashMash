@@ -5,13 +5,21 @@ using System.Threading.Tasks;
 
 namespace HashMash.Shared
 {
+    /*
+     *  The main class that will handle the "mashing" (pathetic hashing) of some input text from the user in the Masher.razor componment.
+     *  The class will store a total count for every click the user has made to calculate their erspective level, which is also stored.
+     *  As the user progresses through levels, the hashing will get more complex.
+     */
     public partial class Masher
     {
 
-        private int totalCount;
-        private int currentLevel;
-        private int levelCount;
+        private int totalCount;     // Total count across all levels
+        private int currentLevel;   // Current level
+        private int levelCount;     // 
 
+        /*
+         * No-arg constructor, init everything to 0 
+         */
         public Masher()
         {
 
@@ -21,13 +29,47 @@ namespace HashMash.Shared
 
         }
 
+        /*
+         * Main incrementer, can be used to handle logic for level progression
+         */
         public void increment()
         {
             totalCount++;
             if (levelCount < 128) levelCount++; // For now just to limit click on level 0
         }
 
-      
+        /*
+         * Given some input string, return "mashed" string with particular operations. Result should be the digest,
+         * the hexadecimal representation of the string.
+         */
+        public string mashInput(string input)
+        {
+            string mashed = "";
+            foreach (char c in input)
+            {
+                mashed += Convert.ToString(c + levelCount, 16);
+            }
+            return mashed;
+        }
+
+        /*
+         * Mash an individual character with appropriate operations.
+         * 
+         * c is the char (as an int) being mashed
+         * b is the base representation which we are converting to e.g. 10 (decimal), 2 (binary), 16 (hexa) etc.
+         */
+        public string mashCh(int c, int b)
+        {
+            if (currentLevel == 0) {
+                c += levelCount;
+            }
+            return Convert.ToString(c, b);
+        }
+
+
+        /*
+         * To reset the classes, and handle any other operations when invoked.
+         */
         public void reset()
         {
             totalCount = 0;

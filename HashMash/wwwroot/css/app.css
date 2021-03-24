@@ -57,6 +57,14 @@ a, .btn-link {
     transition: 0.3s;
 }
 
+#table-div {
+    overflow: auto;
+}
+
+#table-div > table {
+    table-layout: fixed;
+}
+
 
 @media screen and (max-width: 600px) {
     #hash-input {
