@@ -19,8 +19,8 @@
 
 <div class="col" style="padding-bottom: 10px;">
 
-    <button type="button" @onclick="increment" class="btn btn-outline-success">Mash</button>
-    <button type="button" @onclick="reset" class="btn btn-outline-danger">Reset</button>
+    <button type="button" @onclick="incrementState" class="btn btn-outline-success">Mash</button>
+    <button type="button" @onclick="resetState" class="btn btn-outline-danger">Reset</button>
 </div>
 
 
@@ -77,16 +77,46 @@
     <h5>@mashInput(this.inputValue)</h5>
 }
 
+@inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 
 @code {
 
     private string inputValue = "";
 
+    protected override void OnInitialized()
+    {
+        var sessionInput = sessionStorage.GetItem<string>("input");
+
+        // Test input value for a stored session
+        if (sessionInput == null)
+        {
+            inputValue = "";
+        } else
+        {
+            this.inputValue = sessionInput;
+            totalCount = sessionStorage.GetItem<int>("totalCount");
+            levelCount = sessionStorage.GetItem<int>("levelCount");
+            currentLevel = sessionStorage.GetItem<int>("currentLevel");
+            progress = (((float)levelCount) / 64) * 100;
+        }
+
+    }
+
     // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
         this.inputValue = value;
+        sessionStorage.SetItem<string>("input", inputValue);
 
+    }
+
+    public void incrementState()
+    {
+        increment();
+
+        sessionStorage.SetItem<int>("totalCount", totalCount);
+        sessionStorage.SetItem<int>("levelCount", levelCount);
+        sessionStorage.SetItem<int>("currentLevel", currentLevel);
     }
 
     // To possibly reset full state (users input string included)
@@ -96,6 +126,8 @@
 
         reset();            // Reset the current masher
         inputValue = "";    // Reset the input
+
+        sessionStorage.Clear();
 
     }
 

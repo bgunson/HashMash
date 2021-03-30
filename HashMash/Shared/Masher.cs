@@ -16,8 +16,7 @@ namespace HashMash.Shared
         private int totalCount;     // Total count across all levels
         private int currentLevel;   // Current level
         private int levelCount;     // Number of clicks on current level
-        private int nextLevel;
-        private float progress;
+        private float progress;     // Progress as a percentage of levelCOunt / 64
 
         /*
          * No-arg constructor, init everything to 0 
@@ -28,7 +27,6 @@ namespace HashMash.Shared
             this.totalCount = 0;
             this.currentLevel = 0;
             this.levelCount = 0;
-            this.nextLevel = 64;
             this.progress = 0;
 
         }
@@ -48,7 +46,6 @@ namespace HashMash.Shared
                 levelCount = 0;
             }
             progress = (((float)levelCount) / 64) * 100;
-            Console.WriteLine(progress);
 
         }
 
