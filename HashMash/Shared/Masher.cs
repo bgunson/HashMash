@@ -56,7 +56,7 @@ namespace HashMash.Shared
         public string mashInput()
         {
             string mashed = "";
-            foreach (char c in InputValue)
+            foreach (char c in inputValue)
             {
                 mashed += Convert.ToString(c + levelCount, 16);
             }
