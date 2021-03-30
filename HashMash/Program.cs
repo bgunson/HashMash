@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
+using Blazored.SessionStorage;
 
 namespace HashMash
 {
@@ -29,6 +30,9 @@ namespace HashMash
               })
               .AddBootstrapProviders()
               .AddFontAwesomeIcons();
+
+            builder.Services.AddBlazoredSessionStorage(config =>
+                config.JsonSerializerOptions.WriteIndented = true);
 
             await builder.Build().RunAsync();
         }
