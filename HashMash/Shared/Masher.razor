@@ -4,10 +4,21 @@
 <hr />
 
 <p>Total Clicks: @totalCount</p>
+
 <h6>Level: @currentLevel</h6>
+
+<div class="row justify-content-center">
+    <div class="col-sm-3">
+        <div class="progress">
+            <div class="progress-bar progress-bar-animated" role="progressbar" aria-valuenow="@progress%" aria-valuemin="0" aria-valuemax="64" style="width: @progress%"></div>
+        </div>
+    </div>
+</div>
+
 <h5>Level Clicks: @levelCount</h5>
 
 <div class="col" style="padding-bottom: 10px;">
+
     <button type="button" @onclick="increment" class="btn btn-outline-success">Mash</button>
     <button type="button" @onclick="reset" class="btn btn-outline-danger">Reset</button>
 </div>
@@ -16,7 +27,7 @@
 
 <div class="table-responsive">
     @if (inputValue != "") // Only show output table when there is non empty input from user
-    {  
+    {
         <table class="table">
 
             <thead>
@@ -24,7 +35,7 @@
                     <th scope="col">Input</th>
                     @foreach (var c in inputValue)
                     {
-                        <th scope="col">@c<small> + @levelCount</small></th>
+                        <th scope="col">@c<small> (+ @levelCount)</small></th>
                     }
                 </tr>
             </thead>
@@ -37,15 +48,15 @@
                         <td>@mashCh(c, 10)</td>
                     }
                 </tr>
-                <tr>  
-                    <th scope="row">Binary</th>   
+                <tr>
+                    <th scope="row">Binary</th>
                     @foreach (char c in inputValue)
                     {
                         // Mash each char -> binary
                         <td>@mashCh(c, 2)</td>
                     }
                 </tr>
-                <tr>  
+                <tr>
                     <th scope="row">Hexadecimal</th>
                     @foreach (char c in inputValue)
                     {
@@ -71,7 +82,7 @@
 
     private string inputValue = "";
 
-    // To reflect changes in user input, as user changes the input 
+    // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
         this.inputValue = value;
