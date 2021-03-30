@@ -1,5 +1,5 @@
 ﻿
-<input @bind-value="@inputValue" @oninput="(EventArgs) => {inputChanged(EventArgs.Value.ToString());}" type="text" placeholder="Type something..." onfocus="this.placeholder=''" maxlength="16" autofocus />
+<input @bind="@InputValue" @oninput="(EventArgs) => {inputChanged(EventArgs.Value.ToString());}" type="text" placeholder="Type something..." onfocus="this.placeholder=''" maxlength="16"/>
 
 <hr />
 
@@ -26,14 +26,14 @@
 
 
 <div class="table-responsive">
-    @if (inputValue != "") // Only show output table when there is non empty input from user
+    @if (InputValue != "") // Only show output table when there is non empty input from user
     {
         <table class="table">
 
             <thead>
                 <tr>
                     <th scope="col">Input</th>
-                    @foreach (var c in inputValue)
+                    @foreach (var c in InputValue)
                     {
                         <th scope="col">@c<small> (+ @levelCount)</small></th>
                     }
@@ -42,7 +42,7 @@
             <tbody>
                 <tr>
                     <th scope="row">Decimal</th>
-                    @foreach (char c in inputValue)
+                    @foreach (char c in InputValue)
                     {
                         // Mash each char -> base 10
                         <td>@mashCh(c, 10)</td>
@@ -50,7 +50,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Binary</th>
-                    @foreach (char c in inputValue)
+                    @foreach (char c in InputValue)
                     {
                         // Mash each char -> binary
                         <td>@mashCh(c, 2)</td>
@@ -58,7 +58,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Hexadecimal</th>
-                    @foreach (char c in inputValue)
+                    @foreach (char c in InputValue)
                     {
                         // Mash each char -> hexadecimal
                         <td>@mashCh(c, 16)</td>
@@ -70,30 +70,35 @@
 </div>
 
 
-@if (inputValue != "")
+@if (InputValue != "")
 {
     // Display the hash digest
     <h4>Hash Digest:</h4>
-    <h5>@mashInput(this.inputValue)</h5>
+    <h5>@mashInput(InputValue)</h5>
 }
 
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 
+
 @code {
 
-    private string inputValue = "";
+    [Parameter]
+    public string InputValue { get; set; }
 
+    // Check session storage for an existing state, set fields if one exists
     protected override void OnInitialized()
     {
+
         var sessionInput = sessionStorage.GetItem<string>("input");
 
         // Test input value for a stored session
         if (sessionInput == null)
         {
-            inputValue = "";
-        } else
+            InputValue = "";
+        }
+        else
         {
-            this.inputValue = sessionInput;
+            this.InputValue = sessionInput;
             totalCount = sessionStorage.GetItem<int>("totalCount");
             levelCount = sessionStorage.GetItem<int>("levelCount");
             currentLevel = sessionStorage.GetItem<int>("currentLevel");
@@ -105,30 +110,42 @@
     // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
-        this.inputValue = value;
-        sessionStorage.SetItem<string>("input", inputValue);
+
+        InputValue = value;
+
+        storeState();
 
     }
 
+    // Icrements masher, then store state to session storage
     public void incrementState()
     {
         increment();
 
-        sessionStorage.SetItem<int>("totalCount", totalCount);
-        sessionStorage.SetItem<int>("levelCount", levelCount);
-        sessionStorage.SetItem<int>("currentLevel", currentLevel);
+        storeState();
     }
 
-    // To possibly reset full state (users input string included)
+    // Reset state (incl. sessionStorage) but keeps input intact
     public void resetState()
     {
         // Maybe show warning popup here before resetting
 
         reset();            // Reset the current masher
-        inputValue = "";    // Reset the input
 
-        sessionStorage.Clear();
+        sessionStorage.RemoveItem("totalCount");
+        sessionStorage.RemoveItem("levelCount");
+        sessionStorage.RemoveItem("currentLevel");
 
+
+    }
+
+    // Store the state to session storage
+    public void storeState()
+    {
+        sessionStorage.SetItem<string>("input", InputValue);
+        sessionStorage.SetItem<int>("totalCount", totalCount);
+        sessionStorage.SetItem<int>("levelCount", levelCount);
+        sessionStorage.SetItem<int>("currentLevel", currentLevel);
     }
 
 }
