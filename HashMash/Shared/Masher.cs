@@ -74,9 +74,8 @@ namespace HashMash.Shared
          */
         public string mashCh(int c, int b)
         {
-            if (currentLevel == 0) {
-                c += levelCount;
-            }
+            c += levelCount;
+            
             return Convert.ToString(c, b);
         }
 
