@@ -16,7 +16,8 @@ namespace HashMash.Shared
         private int totalCount;     // Total count across all levels
         private int currentLevel;   // Current level
         private int levelCount;     // Number of clicks on current level
-        private int nextLevel = 128;
+        private int nextLevel;
+        private float progress;
 
         /*
          * No-arg constructor, init everything to 0 
@@ -27,6 +28,8 @@ namespace HashMash.Shared
             this.totalCount = 0;
             this.currentLevel = 0;
             this.levelCount = 0;
+            this.nextLevel = 64;
+            this.progress = 0;
 
         }
 
@@ -38,13 +41,15 @@ namespace HashMash.Shared
             totalCount++;
             levelCount++;
             int oldLevel = currentLevel;
-            currentLevel = totalCount / 128;
+            currentLevel = totalCount / 64;
             if (oldLevel != currentLevel)
             {
                 // If level changed, then reset current count
                 levelCount = 0;
             }
-            nextLevel = 128 - levelCount;
+            progress = (((float)levelCount) / 64) * 100;
+            Console.WriteLine(progress);
+
         }
 
         /*
@@ -84,7 +89,7 @@ namespace HashMash.Shared
             totalCount = 0;
             levelCount = 0;
             currentLevel = 0;
-            nextLevel = 128 - levelCount;
+            progress = 0;
         }
     }
 }

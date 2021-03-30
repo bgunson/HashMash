@@ -3,16 +3,29 @@
 
 <hr />
 
-<p>Total Clicks: @totalCount</p>
+<div class="container">
 
-<h6>Level: @currentLevel</h6>
+    <p>Total Clicks: @totalCount</p>
+
+    <h6>Level: @currentLevel</h6>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-3">
+            <div class="progress">
+                <div class="progress-bar progress-bar-animated" role="progressbar" aria-valuenow="@progress%" aria-valuemin="0" aria-valuemax="64" style="width: @progress%"></div>
+            </div>
+        </div>
+    </div>
 
 
-<h5>Level Clicks: @levelCount</h5>
+    <h5>Level Clicks: @levelCount</h5>
 
-<div class="col" style="padding-bottom: 10px;">
-    <button type="button" @onclick="increment" class="btn btn-outline-success">Mash</button>
-    <button type="button" @onclick="reset" class="btn btn-outline-danger">Reset</button>
+    <div class="col" style="padding-bottom: 10px;">
+
+        <button type="button" @onclick="increment" class="btn btn-outline-success">Mash</button>
+        <button type="button" @onclick="reset" class="btn btn-outline-danger">Reset</button>
+    </div>
+
 </div>
 
 
