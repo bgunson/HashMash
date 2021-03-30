@@ -53,10 +53,10 @@ namespace HashMash.Shared
          * Given some input string, return "mashed" string with particular operations. Result should be the digest,
          * the hexadecimal representation of the string.
          */
-        public string mashInput(string input)
+        public string mashInput()
         {
             string mashed = "";
-            foreach (char c in input)
+            foreach (char c in InputValue)
             {
                 mashed += Convert.ToString(c + levelCount, 16);
             }
