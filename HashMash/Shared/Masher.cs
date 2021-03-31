@@ -18,12 +18,12 @@ namespace HashMash.Shared
         /*
          * No-arg constructor, init everything to 0 
          */
-        public Masher() // We shouldn't need 'this' keyword here should we?
+        public Masher() 
         {
-            this._totalCount = 0;
-            this._currentLevel = 0;
-            this._levelCount = 0;
-            this._progress = 0;
+            _totalCount = 0;
+            _currentLevel = 0;
+            _levelCount = 0;
+            _progress = 0;
         }
 
         /*
