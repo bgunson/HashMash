@@ -6,22 +6,41 @@
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 
 
-<div class="container text-center">
+<div class="container">
 
-    <h2>HashMash</h2>
-
-    @if (!dismissed)
+    @if (!continued)
     {
-        // Lets consider making this an actual modal popup, with something like the alert but also a quick explanation of the Masher and how to use it with some examples maybe
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Welcome!</strong> Before playing with the Masher remember that it is for educational purposes only and follow safe internet practices. Never input your actual passwords into unknown sites... including this one.
-            <button type="button" @onclick="@(e => sessionStorage.SetItem<bool>("dismissed", true))" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+        <div class="row text-center">
+            <h2>Welcome to HashMash!</h2>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <p>
+                    Give quick blurb on what it is, the intent, and how to use...
+                </p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <p>
+                    Before playing with the Masher remember that it is for educational purposes only. Follow safe internet practices. Never input your actual passwords into unknown sites... including this one.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="row text-center">
+            <div class="col-sm">
+                <button type="button" @onclick="@(e => sessionStorage.SetItem<bool>("dismissed", true))" class="btn btn-primary">Continue</button>
+            </div>
         </div>
     }
-
-
-
-    <Masher></Masher>
+    else
+    {
+        <Masher></Masher>
+    }
 
 </div>
 
@@ -29,7 +48,7 @@
 
 @code {
 
-    // Flag to show the alert or not - default is false (show alert)
-    bool dismissed => true ? sessionStorage.GetItem<bool>("dismissed") : false;
+    // Flag to show the welcome page or not - default is false (show alert)
+    bool continued => true ? sessionStorage.GetItem<bool>("dismissed") : false;
 
 }
