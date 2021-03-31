@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HashMash.Shared
 {
@@ -13,22 +10,20 @@ namespace HashMash.Shared
     public partial class Masher
     {
 
-        private int totalCount;     // Total count across all levels
-        private int currentLevel;   // Current level
-        private int levelCount;     // Number of clicks on current level
-        private float progress;     // Progress as a percentage of levelCOunt / 64
+        private int _totalCount;     // Total count across all levels
+        private int _currentLevel;   // Current level
+        private int _levelCount;     // Number of clicks on current level
+        private float _progress;     // Progress as a percentage of levelCOunt / 64
 
         /*
          * No-arg constructor, init everything to 0 
          */
-        public Masher()
+        public Masher() // We shouldn't need 'this' keyword here should we?
         {
-
-            this.totalCount = 0;
-            this.currentLevel = 0;
-            this.levelCount = 0;
-            this.progress = 0;
-
+            this._totalCount = 0;
+            this._currentLevel = 0;
+            this._levelCount = 0;
+            this._progress = 0;
         }
 
         /*
@@ -36,16 +31,16 @@ namespace HashMash.Shared
          */
         public void increment()
         {
-            totalCount++;
-            levelCount++;
-            int oldLevel = currentLevel;
-            currentLevel = totalCount / 64;
-            if (oldLevel != currentLevel)
+            _totalCount++;
+            _levelCount++;
+            int oldLevel = _currentLevel;
+            _currentLevel = _totalCount / 64;
+            if (oldLevel != _currentLevel)
             {
                 // If level changed, then reset current count
-                levelCount = 0;
+                _levelCount = 0;
             }
-            progress = (((float)levelCount) / 64) * 100;
+            _progress = (((float) _levelCount) / 64) * 100;
 
         }
 
@@ -58,7 +53,7 @@ namespace HashMash.Shared
             string mashed = "";
             foreach (char c in inputValue)
             {
-                mashed += Convert.ToString(c + levelCount, 16);
+                mashed += Convert.ToString(c + _levelCount, 16);
             }
             return mashed;
         }
@@ -71,7 +66,7 @@ namespace HashMash.Shared
          */
         public string mashCh(int c, int b)
         {
-            c += levelCount;
+            c += _levelCount;
             
             return Convert.ToString(c, b);
         }
@@ -82,10 +77,10 @@ namespace HashMash.Shared
          */
         public void reset()
         {
-            totalCount = 0;
-            levelCount = 0;
-            currentLevel = 0;
-            progress = 0;
+            _totalCount = 0;
+            _levelCount = 0;
+            _currentLevel = 0;
+            _progress = 0;
         }
     }
 }

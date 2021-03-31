@@ -17,16 +17,16 @@
 
 <hr />
 
-<p>Total Clicks: @totalCount</p>
+<p>Total Clicks: @_totalCount</p>
 
-<h6>Level: @currentLevel</h6>
+<h6>Level: @_currentLevel</h6>
 
-<h5>Level Clicks: @levelCount</h5>
+<h5>Level Clicks: @_levelCount</h5>
 
 <div class="row justify-content-center" style="padding-bottom: 15px">
     <div class="col-sm-4">
         <div class="progress">
-            <div class="progress-bar progress-bar-animated" role="progressbar" aria-valuenow="@progress%" aria-valuemin="0" aria-valuemax="64" style="width: @progress%"></div>
+            <div class="progress-bar progress-bar-animated" role="progressbar" aria-valuenow="@_progress%" aria-valuemin="0" aria-valuemax="64" style="width: @_progress%"></div>
         </div>
     </div>
 </div>
@@ -45,13 +45,13 @@
             <thead>
                 <tr>
                     <th scope="col">Input</th>
-                    @foreach (var c in inputValue)
+                    @foreach (char c in inputValue)
                     {
                         <th scope="col">
                             @c
-                            @if (levelCount > 0)
+                            @if (_levelCount > 0)
                             {
-                                <small> (+ @levelCount)</small>
+                                <small> (+ @_levelCount)</small>
                             }
                         </th>
                     }
@@ -108,7 +108,7 @@
     protected override void OnInitialized()
     {
 
-        var sessionInput = sessionStorage.GetItem<string>("input");
+        string sessionInput = sessionStorage.GetItem<string>("input");
 
         // Test input value for a stored session
         if (sessionInput == null)
@@ -118,10 +118,10 @@
         else
         {
             inputValue = sessionInput;
-            totalCount = sessionStorage.GetItem<int>("totalCount");
-            levelCount = sessionStorage.GetItem<int>("levelCount");
-            currentLevel = sessionStorage.GetItem<int>("currentLevel");
-            progress = (((float)levelCount) / 64) * 100;
+            _totalCount = sessionStorage.GetItem<int>("totalCount");
+            _levelCount = sessionStorage.GetItem<int>("levelCount");
+            _currentLevel = sessionStorage.GetItem<int>("currentLevel");
+            _progress = (((float) _levelCount) / 64) * 100;
         }
 
     }
@@ -168,9 +168,9 @@
     public void storeState()
     {
         sessionStorage.SetItem<string>("input", inputValue);
-        sessionStorage.SetItem<int>("totalCount", totalCount);
-        sessionStorage.SetItem<int>("levelCount", levelCount);
-        sessionStorage.SetItem<int>("currentLevel", currentLevel);
+        sessionStorage.SetItem<int>("totalCount", _totalCount);
+        sessionStorage.SetItem<int>("levelCount", _levelCount);
+        sessionStorage.SetItem<int>("currentLevel", _currentLevel);
     }
 
 }
