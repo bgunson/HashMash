@@ -33,9 +33,12 @@
         </div>
     </div>
 
-    <div class="col" style="padding-bottom: 10px;">
-        <button type="button" @onclick="incrementState" class="btn btn-outline-success">Mash</button>
-        <button type="button" @onclick="resetState" class="btn btn-outline-danger">Reset</button>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-2" style="padding-bottom: 10px;">
+            <button type="button" @onclick="incrementState" class="btn btn-outline-success">Mash</button>
+            <button type="button" @onclick="resetState" class="btn btn-outline-danger">Reset</button>
+        </div>
     </div>
 
 
@@ -88,15 +91,15 @@
             </table>
         }
     </div>
+
+    @if (inputValue != "")
+    {
+        // Display the hash digest
+        <h4>Hash Digest:</h4>
+        <h5>@mashInput()</h5>
+    }
 </div>
 
-
-@if (inputValue != "")
-{
-    // Display the hash digest
-    <h4>Hash Digest:</h4>
-    <h5>@mashInput()</h5>
-}
 
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
 
