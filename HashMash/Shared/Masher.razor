@@ -1,5 +1,4 @@
 ﻿
-
 <div class="row justify-content-center">
     <div class="col-lg-3">
         <Validations @ref="validations" Mode="ValidationMode.Manual">
@@ -15,7 +14,7 @@
         </Validations>
     </div>
 </div>
-    
+
 <hr />
 
 <p>Total Clicks: @totalCount</p>
@@ -48,13 +47,13 @@
                     <th scope="col">Input</th>
                     @foreach (var c in inputValue)
                     {
-                    <th scope="col">
-                        @c
-                        @if (levelCount > 0)
-                        {
-                            <small> (+ @levelCount)</small>
-                        }
-                    </th>
+                        <th scope="col">
+                            @c
+                            @if (levelCount > 0)
+                            {
+                                <small> (+ @levelCount)</small>
+                            }
+                        </th>
                     }
                 </tr>
             </thead>
@@ -133,9 +132,8 @@
         inputValue = value;
 
         validations.ValidateAll();
-        
-        storeState();
 
+        storeState();
     }
 
     // Icrements masher, then store state to session storage
@@ -160,10 +158,9 @@
 
         reset();    // Reset the current masher, excluding user test input
 
-        sessionStorage.RemoveItem("totalCount");
-        sessionStorage.RemoveItem("levelCount");
-        sessionStorage.RemoveItem("currentLevel");
-
+        sessionStorage.SetItem<int>("totalCount", 0);
+        sessionStorage.SetItem<int>("levelCount", 0);
+        sessionStorage.SetItem<int>("currentLevel", 0);
 
     }
 
