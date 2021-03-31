@@ -7,16 +7,33 @@
 
     <h2>HashMash</h2>
 
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Welcome!</strong> Before playing with the Masher remember that it is for educational purposes only and follow safe internet practices. Never input your actual passwords into unknown sites... including this one.
-        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
-    </div>
+    @if (!dismissed)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Welcome!</strong> Before playing with the Masher remember that it is for educational purposes only and follow safe internet practices. Never input your actual passwords into unknown sites... including this one.
+            <button type="button" @onclick="dismissAlert" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <Masher></Masher>
 
 </div>
 
+@inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
+
+
 @code {
-   
+
+    bool dismissed = false;
+
+    protected override void OnInitialized()
+    {
+        dismissed = sessionStorage.GetItem<bool>("dismissed");
+    }
+
+    void dismissAlert()
+    {
+        sessionStorage.SetItem<bool>("dismissed", true);
+    }
 
 }
