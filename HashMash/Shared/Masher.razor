@@ -1,11 +1,12 @@
 ﻿
 
 <div class="row justify-content-center">
-    <div class="col-md-4">
-        <Validations @ref="validations" Mode="ValidationMode.Manual">
+    <div class="col-lg-3">
+        <Validations @ref="validations" Mode="ValidationMode.Auto" ValidateOnLoad="false">
             <Validation Validator="@ValidationRule.IsNotEmpty">
-                <TextEdit Text="@inputValue" TextChanged="@inputChanged" MaxLength="16" Placeholder="Enter somthing nice!">
+                <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" MaxLength="16" Placeholder="">
                     <Feedback>
+                        <ValidationNone>Input something and start clicking!</ValidationNone>
                         <ValidationSuccess>Good enough.</ValidationSuccess>
                         <ValidationError>I suggest you enter something or nothing is going to happen...</ValidationError>
                     </Feedback>
@@ -132,10 +133,15 @@
     // Icrements masher, then store state to session storage
     public void incrementState()
     {
-        validations.ValidateAll();
+        // Check for user input and validate
+        if (inputValue == "")
+        {
+            validations.ValidateAll();
+        }
 
         increment();
 
+        // Store incremented state
         storeState();
     }
 
@@ -144,7 +150,7 @@
     {
         // Maybe show warning popup here before resetting
 
-        reset();            // Reset the current masher
+        reset();    // Reset the current masher, excluding user test input
 
         sessionStorage.RemoveItem("totalCount");
         sessionStorage.RemoveItem("levelCount");
