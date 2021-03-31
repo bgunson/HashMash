@@ -130,17 +130,10 @@
     // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
-
-        if (inputValue == "" && value != "")
-        {
-            validations.ValidateAll();
-        } else if (inputValue != "" && value == "")
-        {
-            validations.ValidateAll();
-        }
-
         inputValue = value;
 
+        validations.ValidateAll();
+        
         storeState();
 
     }
