@@ -1,5 +1,19 @@
 ﻿
-<input @bind="@InputValue" @oninput="(EventArgs) => {inputChanged(EventArgs.Value.ToString());}" type="text" placeholder="Type something..." onfocus="this.placeholder=''" maxlength="16"/>
+<div class="row justify-content-center">
+    <div class="col-lg-3">
+        <Validations @ref="validations" Mode="ValidationMode.Manual">
+            <Validation Validator="@ValidationRule.IsNotEmpty">
+                <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" MaxLength="16" Placeholder="">
+                    <Feedback>
+                        <ValidationNone>Input something and start clicking!</ValidationNone>
+                        <ValidationSuccess>Good enough.</ValidationSuccess>
+                        <ValidationError>I suggest you enter something or nothing is going to happen...</ValidationError>
+                    </Feedback>
+                </TextEdit>
+            </Validation>
+        </Validations>
+    </div>
+</div>
 
 <hr />
 
@@ -7,42 +21,46 @@
 
 <h6>Level: @currentLevel</h6>
 
-<div class="row justify-content-center">
-    <div class="col-sm-3">
+<h5>Level Clicks: @levelCount</h5>
+
+<div class="row justify-content-center" style="padding-bottom: 15px">
+    <div class="col-sm-4">
         <div class="progress">
             <div class="progress-bar progress-bar-animated" role="progressbar" aria-valuenow="@progress%" aria-valuemin="0" aria-valuemax="64" style="width: @progress%"></div>
         </div>
     </div>
 </div>
 
-<h5>Level Clicks: @levelCount</h5>
-
 <div class="col" style="padding-bottom: 10px;">
-
     <button type="button" @onclick="incrementState" class="btn btn-outline-success">Mash</button>
     <button type="button" @onclick="resetState" class="btn btn-outline-danger">Reset</button>
 </div>
 
 
-
 <div class="table-responsive">
-    @if (InputValue != "") // Only show output table when there is non empty input from user
+    @if (inputValue != "") // Only show output table when there is non empty input from user
     {
         <table class="table">
 
             <thead>
                 <tr>
                     <th scope="col">Input</th>
-                    @foreach (var c in InputValue)
+                    @foreach (var c in inputValue)
                     {
-                        <th scope="col">@c<small> (+ @levelCount)</small></th>
+                        <th scope="col">
+                            @c
+                            @if (levelCount > 0)
+                            {
+                                <small> (+ @levelCount)</small>
+                            }
+                        </th>
                     }
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <th scope="row">Decimal</th>
-                    @foreach (char c in InputValue)
+                    @foreach (char c in inputValue)
                     {
                         // Mash each char -> base 10
                         <td>@mashCh(c, 10)</td>
@@ -50,7 +68,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Binary</th>
-                    @foreach (char c in InputValue)
+                    @foreach (char c in inputValue)
                     {
                         // Mash each char -> binary
                         <td>@mashCh(c, 2)</td>
@@ -58,7 +76,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Hexadecimal</th>
-                    @foreach (char c in InputValue)
+                    @foreach (char c in inputValue)
                     {
                         // Mash each char -> hexadecimal
                         <td>@mashCh(c, 16)</td>
@@ -70,11 +88,11 @@
 </div>
 
 
-@if (InputValue != "")
+@if (inputValue != "")
 {
     // Display the hash digest
     <h4>Hash Digest:</h4>
-    <h5>@mashInput(InputValue)</h5>
+    <h5>@mashInput()</h5>
 }
 
 @inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
@@ -82,8 +100,9 @@
 
 @code {
 
-    [Parameter]
-    public string InputValue { get; set; }
+    public string inputValue;
+
+    Validations validations;
 
     // Check session storage for an existing state, set fields if one exists
     protected override void OnInitialized()
@@ -94,11 +113,11 @@
         // Test input value for a stored session
         if (sessionInput == null)
         {
-            InputValue = "";
+            inputValue = "";
         }
         else
         {
-            this.InputValue = sessionInput;
+            inputValue = sessionInput;
             totalCount = sessionStorage.GetItem<int>("totalCount");
             levelCount = sessionStorage.GetItem<int>("levelCount");
             currentLevel = sessionStorage.GetItem<int>("currentLevel");
@@ -110,18 +129,25 @@
     // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
+        inputValue = value;
 
-        InputValue = value;
+        validations.ValidateAll();
 
         storeState();
-
     }
 
     // Icrements masher, then store state to session storage
     public void incrementState()
     {
+        // Validate user input
+        if (inputValue == "")
+        {
+            validations.ValidateAll();
+        }
+
         increment();
 
+        // Store incremented state
         storeState();
     }
 
@@ -130,19 +156,18 @@
     {
         // Maybe show warning popup here before resetting
 
-        reset();            // Reset the current masher
+        reset();    // Reset the current masher, excluding user test input
 
-        sessionStorage.RemoveItem("totalCount");
-        sessionStorage.RemoveItem("levelCount");
-        sessionStorage.RemoveItem("currentLevel");
-
+        sessionStorage.SetItem<int>("totalCount", 0);
+        sessionStorage.SetItem<int>("levelCount", 0);
+        sessionStorage.SetItem<int>("currentLevel", 0);
 
     }
 
     // Store the state to session storage
     public void storeState()
     {
-        sessionStorage.SetItem<string>("input", InputValue);
+        sessionStorage.SetItem<string>("input", inputValue);
         sessionStorage.SetItem<int>("totalCount", totalCount);
         sessionStorage.SetItem<int>("levelCount", levelCount);
         sessionStorage.SetItem<int>("currentLevel", currentLevel);
