@@ -19,6 +19,8 @@
         </div>
     }
 
+
+
     <Masher></Masher>
 
 </div>
@@ -28,13 +30,6 @@
 @code {
 
     // Flag to show the alert or not - default is false (show alert)
-    bool dismissed = false;
-
-    // Check for flag in session storage if a user has already dismissed so that if they have
-    // then upon returning to this page it will not show again
-    protected override void OnInitialized()
-    {
-        dismissed = sessionStorage.GetItem<bool>("dismissed");
-    }
+    bool dismissed => true ? sessionStorage.GetItem<bool>("dismissed") : false;
 
 }
