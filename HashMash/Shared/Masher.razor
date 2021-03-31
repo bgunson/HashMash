@@ -2,7 +2,7 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-3">
-        <Validations @ref="validations" Mode="ValidationMode.Auto" ValidateOnLoad="false">
+        <Validations @ref="validations" Mode="ValidationMode.Manual">
             <Validation Validator="@ValidationRule.IsNotEmpty">
                 <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" MaxLength="16" Placeholder="">
                     <Feedback>
@@ -48,7 +48,13 @@
                     <th scope="col">Input</th>
                     @foreach (var c in inputValue)
                     {
-                        <th scope="col">@c<small> (+ @levelCount)</small></th>
+                    <th scope="col">
+                        @c
+                        @if (levelCount > 0)
+                        {
+                            <small> (+ @levelCount)</small>
+                        }
+                    </th>
                     }
                 </tr>
             </thead>
@@ -124,6 +130,15 @@
     // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
+
+        if (inputValue == "" && value != "")
+        {
+            validations.ValidateAll();
+        } else if (inputValue != "" && value == "")
+        {
+            validations.ValidateAll();
+        }
+
         inputValue = value;
 
         storeState();
@@ -133,7 +148,7 @@
     // Icrements masher, then store state to session storage
     public void incrementState()
     {
-        // Check for user input and validate
+        // Validate user input
         if (inputValue == "")
         {
             validations.ValidateAll();
