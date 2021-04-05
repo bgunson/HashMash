@@ -49,13 +49,7 @@ a, .btn-link {
         top: 0.5rem;
     }
 
-#hash-input {
-    text-align: center;
-    background-color: transparent;
-    font-size: 2vw;
-    outline: none;
-    transition: 0.3s;
-}
+
 
 #table-div {
     overflow: auto;
@@ -63,16 +57,5 @@ a, .btn-link {
 
 #table-div > table {
     table-layout: fixed;
-}
-
-
-@media screen and (max-width: 600px) {
-    #hash-input {
-        font-size: 6vw;
-    }
-
-    .container-widget > p {
-        font-size: 3.5vw;
-    }
 }
 
