@@ -3,8 +3,6 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Collections.Generic;
 
-//Some comment
-
 namespace HashMash.Shared
 {
     /*
