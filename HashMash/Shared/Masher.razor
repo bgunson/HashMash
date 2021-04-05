@@ -5,7 +5,7 @@
         <div class="col-lg-3">
             <Validations @ref="validations" Mode="ValidationMode.Manual">
                 <Validation Validator="@ValidationRule.IsNotEmpty">
-                    <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" MaxLength="16" Placeholder="">
+                    <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" Placeholder="">
                         <Feedback>
                             <ValidationNone>Input something and start clicking!</ValidationNone>
                             <ValidationSuccess>Good enough.</ValidationSuccess>
@@ -41,6 +41,13 @@
         </div>
     </div>
 
+
+    @if (inputValue != "")
+    {
+        // Display the hash digest
+        <h4>Hash Digest:</h4>
+        <h5>@mashInput()</h5>
+    }
 
     <div class="table-responsive">
         @if (inputValue != "") // Only show output table when there is non empty input from user
@@ -87,17 +94,24 @@
                             <td>@mashCh(c, 16)</td>
                         }
                     </tr>
+                    <tr>
+                        <th scope="row">Left Shift by @(_totalCount % 16)</th>
+                        @foreach (char c in inputValue)
+                        {
+                            <td>@shiftCh(c, 16)</td>
+                        }
+                    </tr>
+                    <tr>
+                        <th scope="row">Modulo @_currentMod</th>
+                        @foreach (char c in inputValue)
+                        {
+                            <td>@modCh(c, 16)</td>
+                        }
+                    </tr>
                 </tbody>
             </table>
         }
     </div>
-
-    @if (inputValue != "")
-    {
-        // Display the hash digest
-        <h4>Hash Digest:</h4>
-        <h5>@mashInput()</h5>
-    }
 </div>
 
 
