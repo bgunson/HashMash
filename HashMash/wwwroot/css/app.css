@@ -50,12 +50,7 @@ a, .btn-link {
     }
 
 
-
-#table-div {
-    overflow: auto;
-}
-
-#table-div > table {
-    table-layout: fixed;
+.card {
+    padding: 20px;
 }
 
