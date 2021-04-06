@@ -22,7 +22,7 @@
         <div class="col-md-6" style="overflow:auto">
             @if (inputValue != "")
             {
-                <div class="card" style="margin:20px">
+                <div class="card">
                     <h5 class="card-title">Hash Digest</h5>
                     <p class="card-text">@mashInput()</p>       
                 </div>
@@ -35,14 +35,17 @@
             <div class="card text-start">
                 <div class="card-body">
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" @bind-value="charOffsetEnabled" @oninput="storeState" id="charOffsetRange">
-                        <label class="form-check-label" for="charOffsetRange"><Tooltip Text="This is what an offset on a character does">Character Offset</Tooltip></label>
+                        <input class="form-check-input" type="checkbox" @bind-value="charOffsetEnabled" @oninput="storeState" id="charOffsetCheckbox">
+                        <label class="form-check-label" for="charOffsetCheckbox"><Tooltip Text="This is what an offset on a character does">Character Offset</Tooltip></label>
+                        <span style="float: right">@_charOffset</span>
                     </div>
-                    <input type="range" class="form-range" @bind-value="_charOffset" @oninput="storeState" min="0" max="128" step="1">
+                    <input type="range" name="charOffsetRange" class="form-range" @bind-value="_charOffset" @oninput="storeState" min="0" max="128" step="1">
+
                     <hr>
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" @bind-value="bitShiftEnabled" @oninput="storeState" id="bitShiftRange">
-                        <label class="form-check-label" for="bitShiftRange"><Tooltip Text="This is what bit shifting does">Bit Shift</Tooltip></label>
+                        <input class="form-check-input" type="checkbox" @bind-value="bitShiftEnabled" @oninput="storeState" id="bitShiftCheckbox">
+                        <label class="form-check-label" for="bitShiftCheckbox"><Tooltip Text="This is what bit shifting does">Bit Shift</Tooltip></label>
+                        <span style="float: right">@_bitShift</span>
                     </div>
                     <input type="range" class="form-range" @bind-value="_bitShift" @oninput="storeState" min="0" max="16" step="1">
 
@@ -50,6 +53,7 @@
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" @bind-value="modNEnabled" @oninput="storeState" id="modNRange">
                         <label class="form-check-label" for="modNRange"><Tooltip Text="This is what mod n does">Mod <i>n</i></Tooltip></label>
+                        <span style="float: right">@_modN</span>
                     </div>
                     <input type="range" class="form-range" @bind-value="_modN" @oninput="storeState" min="1" max="256" step="1">
 
@@ -105,20 +109,6 @@
                                         <td>@mashCh(c, 16)</td>
                                     }
                                 </tr>
-                                @*<tr>
-                                    <th scope="row">Left Shift by @(_totalCount % 16)</th>
-                                    @foreach (char c in inputValue)
-                                    {
-                                        <td>@shiftCh(c, 16)</td>
-                                    }
-                                </tr>
-                                <tr>
-                                    <th scope="row">Modulo @_currentMod</th>
-                                    @foreach (char c in inputValue)
-                                    {
-                                        <td>@modCh(c, 16)</td>
-                                    }
-                                </tr>*@
                             </tbody>
                         </table>
                         
@@ -140,10 +130,10 @@
 @code {
 
     public string inputValue;
-    public bool charOffsetEnabled = false;
-    public bool bitShiftEnabled = false;
-    public bool modNEnabled = false;
-    public bool sha256Enabled = false;
+    public bool charOffsetEnabled;
+    public bool bitShiftEnabled;
+    public bool modNEnabled;
+    public bool sha256Enabled;
 
     Validations validations;
 
