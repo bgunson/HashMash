@@ -1,12 +1,12 @@
 ﻿<div class="container text-center">
-    <h3>Masher</h3>
+    <h3>HashMash</h3>
     <div class="row justify-content-center">
         <div class="col-lg-3">
             <Validations @ref="validations" Mode="ValidationMode.Manual">
                 <Validation Validator="@ValidationRule.IsNotEmpty">
                     <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" Placeholder="">
                         <Feedback>
-                            <ValidationNone>Input something and start clicking!</ValidationNone>
+                            <ValidationNone>Input something!</ValidationNone>
                             <ValidationSuccess>Good enough.</ValidationSuccess>
                             <ValidationError>I suggest you enter something or nothing is going to happen...</ValidationError>
                         </Feedback>
@@ -22,7 +22,7 @@
         <div class="col-md-6" style="overflow:auto">
             @if (inputValue != "")
             {
-                <div class="card">
+                <div class="card" style="margin-bottom: 20px;">
                     <h5 class="card-title">Hash Digest</h5>
                     <p class="card-text">@mashInput()</p>       
                 </div>
@@ -32,7 +32,7 @@
 
     <div class="row">
         <div class="col-md-4">
-            <div class="card text-start">
+            <div class="card text-start" style="margin-bottom: 20px;">
                 <div class="card-body">
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" @bind-value="charOffsetEnabled" @oninput="storeState" id="charOffsetCheckbox">
@@ -68,45 +68,53 @@
         <div class="col-md-8">
             @if (inputValue != "") // Only show output table when there is non empty input from user
             {
-                <div class="card">
+                <div class="card text-start" style="margin-bottom:20px;">
                     <div class="table-responsive">
                         <table class="table">
 
                             <thead>
                                 <tr>
                                     <th scope="col">Input</th>
-                                    @foreach (char c in inputValue)
+                                    @for (int i = 0; i < max_table_chars; i++)
                                     {
-                                        <th scope="col">@c</th>
+                                        <th scope="col">@inputValue[i]</th>
                                     }
+                                    @if (max_table_chars < inputValue.Length)
+                                    {<th>...</th>}
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <th scope="row">Decimal</th>
-                                    @foreach (char c in inputValue)
+                                    @for (int i = 0; i < max_table_chars; i++)
                                     {
                                         // Mash each char -> base 10
                                         <td>
-                                            @mashCh(c, 10)
+                                            @mashCh(inputValue[i], 10)
                                            
                                         </td>
                                     }
                                 </tr>
                                 <tr>
                                     <th scope="row">Binary</th>
-                                    @foreach (char c in inputValue)
-                                    {
+                                    @for (int i = 0; i < max_table_chars; i++)
+                                                        {
                                         // Mash each char -> binary
-                                        <td>@mashCh(c, 2)</td>
+                                        <td>
+                                            @mashCh(inputValue[i], 2)
+
+                                        </td>
                                     }
                                 </tr>
                                 <tr>
                                     <th scope="row">Hexadecimal</th>
-                                    @foreach (char c in inputValue)
-                                    {
-                                        // Mash each char -> hexadecimal
-                                        <td>@mashCh(c, 16)</td>
+                                    @for (int i = 0; i < max_table_chars; i++)
+                                                        {
+                                        // Mash each char -> hexa
+                                        <td>
+                                            @mashCh(inputValue[i], 16)
+
+                                        </td>
                                     }
                                 </tr>
                             </tbody>
@@ -128,6 +136,8 @@
 
 
 @code {
+
+    int max_table_chars = 8;    // max number of chars to show on the table; length of input or 8, whichever is less
 
     public string inputValue;
     public bool charOffsetEnabled;
@@ -161,6 +171,9 @@
     // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
+
+        max_table_chars = Math.Min(value.Length, 8);
+
         inputValue = value;
 
         validations.ValidateAll();
