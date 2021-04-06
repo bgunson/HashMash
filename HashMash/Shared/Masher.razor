@@ -1,5 +1,4 @@
 ﻿<div class="container text-center">
-    <h3>HashMash</h3>
     <div class="row justify-content-center">
         <div class="col-lg-3">
             <Validations @ref="validations" Mode="ValidationMode.Manual">
@@ -79,8 +78,6 @@
                                     {
                                         <th scope="col">@inputValue[i]</th>
                                     }
-                                    @if (max_table_chars < inputValue.Length)
-                                    {<th>...</th>}
                                 </tr>
                             </thead>
                             <tbody>
