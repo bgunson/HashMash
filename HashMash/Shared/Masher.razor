@@ -36,25 +36,25 @@
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" @bind-value="charOffsetEnabled" @oninput="storeState" id="charOffsetCheckbox">
                         <label class="form-check-label" for="charOffsetCheckbox"><Tooltip Text="This is what an offset on a character does">Character Offset</Tooltip></label>
-                        <span style="float: right">@_charOffset</span>
+                        <span style="float: right">@charOffset</span>
                     </div>
-                    <input type="range" name="charOffsetRange" class="form-range" @bind-value="_charOffset" @oninput="storeState" min="0" max="128" step="1">
+                    <input type="range" name="charOffsetRange" class="form-range" @bind-value="charOffset" @oninput="storeState" min="0" max="128" step="1">
 
                     <hr>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" @bind-value="bitShiftEnabled" @oninput="storeState" id="bitShiftCheckbox">
                         <label class="form-check-label" for="bitShiftCheckbox"><Tooltip Text="This is what bit shifting does">Bit Shift</Tooltip></label>
-                        <span style="float: right">@_bitShift</span>
+                        <span style="float: right">@bitShift</span>
                     </div>
-                    <input type="range" class="form-range" @bind-value="_bitShift" @oninput="storeState" min="0" max="16" step="1">
+                    <input type="range" class="form-range" @bind-value="bitShift" @oninput="storeState" min="0" max="16" step="1">
 
                     <hr>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" @bind-value="modNEnabled" @oninput="storeState" id="modNRange">
                         <label class="form-check-label" for="modNRange"><Tooltip Text="This is what mod n does">Mod <i>n</i></Tooltip></label>
-                        <span style="float: right">@_modN</span>
+                        <span style="float: right">@modN</span>
                     </div>
-                    <input type="range" class="form-range" @bind-value="_modN" @oninput="storeState" min="1" max="256" step="1">
+                    <input type="range" class="form-range" @bind-value="modN" @oninput="storeState" min="1" max="256" step="1">
 
                     <hr />
                     <div class="form-check form-switch">
@@ -129,39 +129,44 @@
 </div>
 
 
-@inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage;
+@using System.Text.Json.Serialization;
+@using System.Text.Json;  
 
 
 @code {
 
-    int max_table_chars = 8;    // max number of chars to show on the table; length of input or 8, whichever is less
+    public string inputValue { get; set; } = "";
+    public bool charOffsetEnabled { get; set; }
+    public bool bitShiftEnabled { get; set; }
+    public bool modNEnabled { get; set; }
+    public bool sha256Enabled { get; set; }
 
-    public string inputValue;
-    public bool charOffsetEnabled;
-    public bool bitShiftEnabled;
-    public bool modNEnabled;
-    public bool sha256Enabled;
+    int max_table_chars;    // max number of chars to show on the table; length of input or 8, whichever is less
 
     Validations validations;
 
     // Check session storage for an existing state, set fields if one exists
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
 
-        string sessionInput = sessionStorage.GetItem<string>("input");
-
         // Test input value for a stored session
-        if (sessionInput == null)
+        if (await sessionStorage.ContainKeyAsync("masher"))
         {
-            inputValue = "";
+            string jsonExisting = await sessionStorage.GetItemAsync<string>("masher");
+            Masher existing = JsonSerializer.Deserialize<Masher>(jsonExisting);
+
+            inputValue = existing.inputValue;
+            charOffset = existing.charOffset;
+            bitShift = existing.bitShift;
+            modN = existing.modN;
+            charOffsetEnabled = existing.charOffsetEnabled;
+            bitShiftEnabled = existing.bitShiftEnabled;
+            modNEnabled = existing.modNEnabled;
+            sha256Enabled = existing.sha256Enabled;
         }
-        else
-        {
-            inputValue = sessionInput;
-            _charOffset = sessionStorage.GetItem<int>("charOffset");
-            _bitShift = sessionStorage.GetItem<int>("bitShift");
-            _modN = sessionStorage.GetItem<int>("modN");
-        }
+
+        max_table_chars = Math.Min(inputValue.Length, 8);    // max number of chars to show on the table; length of input or 8, whichever is less
 
     }
 
@@ -185,19 +190,16 @@
 
         //reset();    // Reset the current masher, excluding user test input
 
-        sessionStorage.SetItem<int>("charOffset", 0);
-        sessionStorage.SetItem<int>("bitShift", 0);
-        sessionStorage.SetItem<int>("modN", 0);
 
     }
 
     // Store the state to session storage
-    public void storeState()
+    public async void storeState()
     {
-        sessionStorage.SetItem<string>("input", inputValue);
-        sessionStorage.SetItem<int>("charOffset", _charOffset);
-        sessionStorage.SetItem<int>("bitShift", _bitShift);
-        sessionStorage.SetItem<int>("modN", _modN);
+
+        string serialized = JsonSerializer.Serialize(this);
+        await sessionStorage.SetItemAsync<string>("masher", serialized);
+
     }
 
 }

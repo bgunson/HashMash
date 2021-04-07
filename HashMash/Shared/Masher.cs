@@ -13,44 +13,13 @@ namespace HashMash.Shared
     public partial class Masher
     {
 
-        private List<int> _listOfPrimes;    // Our list of currently tracked primes for modulus
         //private MD5 _md5Hash;        // An MD5 object for MD5 hash calculation, unused as its broken
-        private SHA256 _sha256Hash;  // A SHA256 object for SHA256 hash calculation
+        private SHA256 _sha256Hash = SHA256.Create();  // A SHA256 object for SHA256 hash calculation
 
-        private int _bitShift;
-        private int _charOffset;
-        private int _modN;
-
-        /*
-         * No-arg constructor, init everything to 0 
-         */
-        public Masher() 
-        {
-            _modN = 1;
-
-            int[] tempPrimeList = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71,
-                                    73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 
-                                    157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 
-                                    239, 241, 251, 257}; // All primes < 256
-            _listOfPrimes = new List<int>(tempPrimeList); // Easiest way to initialize a list with a bunch of elements
-            //_md5Hash = MD5.Create();
-            _sha256Hash = SHA256.Create();
-        }
-
-        /*
-         * Used to check if a number is prime, and add it to the list of tracked primes if so
-         */
-        public bool IsPrime(int n)
-        {
-            if (n < 2) return false;
-            foreach(int p in _listOfPrimes)
-            {
-                if (p > Math.Sqrt(n)) break;
-                if (n % p == 0) return false;
-            }
-            if (!_listOfPrimes.Contains(n)) _listOfPrimes.Add(n);
-            return true;
-        }
+        public int bitShift { get; set; }
+        public int charOffset { get; set; }
+        public int modN { get; set; } = 1;
+     
 
         /*
          * 
@@ -72,7 +41,7 @@ namespace HashMash.Shared
          * Given some input string, return "mashed" string with particular operations. Result should be the digest,
          * the hexadecimal representation of the string.
          */
-        public string mashInput()
+        string mashInput()
         {
             string mashed = "";
             string step1 = "";
@@ -81,9 +50,9 @@ namespace HashMash.Shared
             {
                 int c = ch; // need to copy current ch in foreach to manipulate
 
-                if (charOffsetEnabled) c += _charOffset;
-                if (bitShiftEnabled) c <<= _bitShift;
-                if (modNEnabled) c %= _modN;
+                if (charOffsetEnabled) c += charOffset;
+                if (bitShiftEnabled) c <<= bitShift;
+                if (modNEnabled) c %= modN;
                 string a = Convert.ToString(c, 16);
                 if (a.Length > 1) {
                     step1 += a[0];
@@ -121,9 +90,9 @@ namespace HashMash.Shared
          */
         public string mashCh(int c, int b)
         {
-            if (charOffsetEnabled) c += _charOffset;
-            if (bitShiftEnabled) c <<= _bitShift;
-            if (modNEnabled) c %= _modN;
+            if (charOffsetEnabled) c += charOffset;
+            if (bitShiftEnabled) c <<= bitShift;
+            if (modNEnabled) c %= modN;
             return Convert.ToString(c, b);
         }
 
