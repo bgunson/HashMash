@@ -18,7 +18,7 @@ namespace HashMash.Shared
 
         public int bitShift { get; set; }
         public int charOffset { get; set; }
-        public int modN { get; set; } = 1;
+        public int modN { get; set; } = 1;      // Default 1 (no div by 0)
      
 
         /*
