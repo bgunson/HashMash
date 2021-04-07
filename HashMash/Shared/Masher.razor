@@ -1,13 +1,11 @@
-﻿
-<div class="container text-center">
-    <h3>Masher</h3>
+﻿<div class="container text-center">
     <div class="row justify-content-center">
         <div class="col-lg-3">
             <Validations @ref="validations" Mode="ValidationMode.Manual">
                 <Validation Validator="@ValidationRule.IsNotEmpty">
-                    <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" MaxLength="16" Placeholder="">
+                    <TextEdit Size="Size.Medium" Text="@inputValue" TextChanged="@inputChanged" Placeholder="">
                         <Feedback>
-                            <ValidationNone>Input something and start clicking!</ValidationNone>
+                            <ValidationNone>Input something!</ValidationNone>
                             <ValidationSuccess>Good enough.</ValidationSuccess>
                             <ValidationError>I suggest you enter something or nothing is going to happen...</ValidationError>
                         </Feedback>
@@ -19,141 +17,171 @@
 
     <hr />
 
-    <p>Total Clicks: @_totalCount</p>
+    <div class="row justify-content-center">
+        <div class="col-md-6" style="overflow:auto">
+            @if (inputValue != "")
+            {
+                <div class="card" style="margin-bottom: 20px;">
+                    <h5 class="card-title">Hash Digest</h5>
+                    <p class="card-text">@mashInput()</p>       
+                </div>
+            }
+            </div>
+    </div>
 
-    <h6>Level: @_currentLevel</h6>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-start" style="margin-bottom: 20px;">
+                <div class="card-body">
+                    <form @oninput="storeState">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" @bind="charOffsetEnabled" @oninput="(EventArgs) => { charOffsetEnabled = (bool)EventArgs.Value; }" id="charOffsetCheckbox">
+                            <label class="form-check-label" for="charOffsetCheckbox"><Tooltip Text="This is what an offset on a character does">Character Offset</Tooltip></label>
+                            <span style="float: right">@charOffset</span>
+                        </div>
+                        <input type="range" name="charOffsetRange" class="form-range" @bind="charOffset" @oninput="(EventArgs) => { charOffset = Int32.Parse(EventArgs.Value.ToString()); }" min="0" max="128" step="1">
 
-    <h5>Level Clicks: @_levelCount</h5>
+                        <hr>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" @bind="bitShiftEnabled" @oninput="(EventArgs) => { bitShiftEnabled = (bool)EventArgs.Value; }" id="bitShiftCheckbox">
+                            <label class="form-check-label" for="bitShiftCheckbox"><Tooltip Text="This is what bit shifting does">Bit Shift</Tooltip></label>
+                            <span style="float: right">@bitShift</span>
+                        </div>
+                        <input type="range" class="form-range" @bind="@bitShift" @oninput="(EventArgs) => { bitShift = Int32.Parse(EventArgs.Value.ToString()); }" min="0" max="16" step="1">
 
-    <div class="row justify-content-center" style="padding-bottom: 15px">
-        <div class="col-sm-4">
-            <div class="progress">
-                <div class="progress-bar progress-bar-animated" role="progressbar" aria-valuenow="@_progress%" aria-valuemin="0" aria-valuemax="64" style="width: @_progress%"></div>
+                        <hr>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" @bind="modNEnabled" @oninput="(EventArgs) => { modNEnabled = (bool)EventArgs.Value; }" id="modNRange">
+                            <label class="form-check-label" for="modNRange"><Tooltip Text="This is what mod n does">Mod <i>n</i></Tooltip></label>
+                            <span style="float: right">@modN</span>
+                        </div>
+                        <input type="range" class="form-range" @bind="modN" @oninput="(EventArgs) => { modN = Int32.Parse(EventArgs.Value.ToString()); }"  min="1" max="256" step="1">
+
+                        <hr />
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" @bind="sha256Enabled" @oninput="(EventArgs) => { sha256Enabled = (bool)EventArgs.Value; }" id="sha256Checkbox">
+                            <label class="form-check-label" for="sha256Checkbox"><Tooltip Text="This is what SHA256 is">SHA 256</Tooltip></label>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+        <div class="col-md-8">
+            @if (inputValue != "") // Only show output table when there is non empty input from user
+            {
+                <div class="card text-start" style="margin-bottom:20px;">
+                    <div class="table-responsive">
+                        <table class="table">
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">Input</th>
+                                    @for (int i = 0; i < max_table_chars; i++)
+                                    {
+                                        <th scope="col">@inputValue[i]</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Decimal</th>
+                                    @for (int i = 0; i < max_table_chars; i++)
+                                    {
+                                        // Mash each char -> base 10
+                                        <td>
+                                            @mashCh(inputValue[i], 10)
+                                           
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <th scope="row">Binary</th>
+                                    @for (int i = 0; i < max_table_chars; i++)
+                                                        {
+                                        // Mash each char -> binary
+                                        <td>
+                                            @mashCh(inputValue[i], 2)
+
+                                        </td>
+                                    }
+                                </tr>
+                                <tr>
+                                    <th scope="row">Hexadecimal</th>
+                                    @for (int i = 0; i < max_table_chars; i++)
+                                                        {
+                                        // Mash each char -> hexa
+                                        <td>
+                                            @mashCh(inputValue[i], 16)
+
+                                        </td>
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+            }
+            </div>
     </div>
 
 
-    <div class="row justify-content-center">
-        <div class="col-sm-2" style="padding-bottom: 10px;">
-            <button type="button" @onclick="incrementState" class="btn btn-outline-success">Mash</button>
-            <button type="button" @onclick="resetState" class="btn btn-outline-danger">Reset</button>
-        </div>
-    </div>
+    
 
-
-    <div class="table-responsive">
-        @if (inputValue != "") // Only show output table when there is non empty input from user
-        {
-            <table class="table">
-
-                <thead>
-                    <tr>
-                        <th scope="col">Input</th>
-                        @foreach (char c in inputValue)
-                        {
-                            <th scope="col">
-                                @c
-                                @if (_levelCount > 0)
-                                {
-                                    <small> (+ @_levelCount)</small>
-                                }
-                            </th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">Decimal</th>
-                        @foreach (char c in inputValue)
-                        {
-                            // Mash each char -> base 10
-                            <td>@mashCh(c, 10)</td>
-                        }
-                    </tr>
-                    <tr>
-                        <th scope="row">Binary</th>
-                        @foreach (char c in inputValue)
-                        {
-                            // Mash each char -> binary
-                            <td>@mashCh(c, 2)</td>
-                        }
-                    </tr>
-                    <tr>
-                        <th scope="row">Hexadecimal</th>
-                        @foreach (char c in inputValue)
-                        {
-                            // Mash each char -> hexadecimal
-                            <td>@mashCh(c, 16)</td>
-                        }
-                    </tr>
-                </tbody>
-            </table>
-        }
-    </div>
-
-    @if (inputValue != "")
-    {
-        // Display the hash digest
-        <h4>Hash Digest:</h4>
-        <h5>@mashInput()</h5>
-    }
 </div>
 
 
-@inject Blazored.SessionStorage.ISyncSessionStorageService sessionStorage
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage;
+@using System.Text.Json;  
 
 
 @code {
 
-    public string inputValue;
+    public string inputValue { get; set; } = "";
+    public bool charOffsetEnabled { get; set; }
+    public bool bitShiftEnabled { get; set; }
+    public bool modNEnabled { get; set; }
+    public bool sha256Enabled { get; set; }
+
+    int max_table_chars;    // max number of chars to show on the table; length of input or 8, whichever is less
 
     Validations validations;
 
     // Check session storage for an existing state, set fields if one exists
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
 
-        string sessionInput = sessionStorage.GetItem<string>("input");
-
         // Test input value for a stored session
-        if (sessionInput == null)
+        if (await sessionStorage.ContainKeyAsync("masher"))
         {
-            inputValue = "";
+            string jsonExisting = await sessionStorage.GetItemAsync<string>("masher");
+            Masher existing = JsonSerializer.Deserialize<Masher>(jsonExisting);
+
+            inputValue = existing.inputValue;
+            charOffset = existing.charOffset;
+            bitShift = existing.bitShift;
+            modN = existing.modN;
+            charOffsetEnabled = existing.charOffsetEnabled;
+            bitShiftEnabled = existing.bitShiftEnabled;
+            modNEnabled = existing.modNEnabled;
+            sha256Enabled = existing.sha256Enabled;
+
         }
-        else
-        {
-            inputValue = sessionInput;
-            _totalCount = sessionStorage.GetItem<int>("totalCount");
-            _levelCount = sessionStorage.GetItem<int>("levelCount");
-            _currentLevel = sessionStorage.GetItem<int>("currentLevel");
-            _progress = (((float) _levelCount) / 64) * 100;
-        }
+
+        max_table_chars = Math.Min(inputValue.Length, 8);    // max number of chars to show on the table; length of input or 8, whichever is less
 
     }
 
     // To reflect changes in user input, as user changes the input
     void inputChanged(string value)
     {
+
+        max_table_chars = Math.Min(value.Length, 8);
+
         inputValue = value;
 
         validations.ValidateAll();
 
-        storeState();
-    }
-
-    // Icrements masher, then store state to session storage
-    public void incrementState()
-    {
-        // Validate user input
-        if (inputValue == "")
-        {
-            validations.ValidateAll();
-        }
-
-        increment();
-
-        // Store incremented state
         storeState();
     }
 
@@ -162,21 +190,18 @@
     {
         // Maybe show warning popup here before resetting
 
-        reset();    // Reset the current masher, excluding user test input
+        //reset();    // Reset the current masher, excluding user test input
 
-        sessionStorage.SetItem<int>("totalCount", 0);
-        sessionStorage.SetItem<int>("levelCount", 0);
-        sessionStorage.SetItem<int>("currentLevel", 0);
 
     }
 
     // Store the state to session storage
-    public void storeState()
+    public async void storeState()
     {
-        sessionStorage.SetItem<string>("input", inputValue);
-        sessionStorage.SetItem<int>("totalCount", _totalCount);
-        sessionStorage.SetItem<int>("levelCount", _levelCount);
-        sessionStorage.SetItem<int>("currentLevel", _currentLevel);
+
+        string serialized = JsonSerializer.Serialize(this);
+        await sessionStorage.SetItemAsync<string>("masher", serialized);
+
     }
 
 }

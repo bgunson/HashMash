@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Text;
+using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace HashMash.Shared
 {
@@ -10,52 +13,73 @@ namespace HashMash.Shared
     public partial class Masher
     {
 
-        private int _totalCount;     // Total count across all levels
-        private int _currentLevel;   // Current level
-        private int _levelCount;     // Number of clicks on current level
-        private float _progress;     // Progress as a percentage of levelCOunt / 64
+        //private MD5 _md5Hash;        // An MD5 object for MD5 hash calculation, unused as its broken
+        private SHA256 _sha256Hash = SHA256.Create();  // A SHA256 object for SHA256 hash calculation
+
+        public int bitShift { get; set; }
+        public int charOffset { get; set; }
+        public int modN { get; set; } = 1;      // Default 1 (no div by 0)
+     
 
         /*
-         * No-arg constructor, init everything to 0 
+         * 
          */
-        public Masher() 
+        public string getHash(HashAlgorithm hashAlgorithm, string input)
         {
-            _totalCount = 0;
-            _currentLevel = 0;
-            _levelCount = 0;
-            _progress = 0;
-        }
-
-        /*
-         * Main incrementer, can be used to handle logic for level progression
-         */
-        public void increment()
-        {
-            _totalCount++;
-            _levelCount++;
-            int oldLevel = _currentLevel;
-            _currentLevel = _totalCount / 64;
-            if (oldLevel != _currentLevel)
+            byte[] data = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
+            var sBuilder = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
             {
-                // If level changed, then reset current count
-                _levelCount = 0;
+                sBuilder.Append(data[i].ToString("x2"));
             }
-            _progress = (((float) _levelCount) / 64) * 100;
-
+            return sBuilder.ToString();
         }
+
+      
 
         /*
          * Given some input string, return "mashed" string with particular operations. Result should be the digest,
          * the hexadecimal representation of the string.
          */
-        public string mashInput()
+        string mashInput()
         {
             string mashed = "";
-            foreach (char c in inputValue)
+            string step1 = "";
+            string potentialHash = inputValue;
+            foreach (char ch in potentialHash)
             {
-                mashed += Convert.ToString(c + _levelCount, 16);
+                int c = ch; // need to copy current ch in foreach to manipulate
+
+                if (charOffsetEnabled) c += charOffset;
+                if (bitShiftEnabled) c <<= bitShift;
+                if (modNEnabled) c %= modN;
+                string a = Convert.ToString(c, 16);
+                if (a.Length > 1) {
+                    step1 += a[0];
+                    step1 += a[1];
+                } else
+                {
+                    step1 += "0" + a;
+                }
             }
-            return mashed;
+            while(step1.Length < 64)
+            {
+                step1 += "6c";
+            }
+            if(step1.Length > 64)
+            {
+                step1 = step1.Substring(0, 64);
+            }
+            mashed = step1;
+            if (sha256Enabled)
+            {
+                mashed = getHash(_sha256Hash, mashed);
+                return mashed;
+            }
+            else
+            {
+                return step1;
+            }
         }
 
         /*
@@ -66,21 +90,25 @@ namespace HashMash.Shared
          */
         public string mashCh(int c, int b)
         {
-            c += _levelCount;
-            
+            if (charOffsetEnabled) c += charOffset;
+            if (bitShiftEnabled) c <<= bitShift;
+            if (modNEnabled) c %= modN;
             return Convert.ToString(c, b);
         }
 
+        //public string shiftCh(int c, int b)
+        //{
+        //    string returnVal = Convert.ToString((c + _levelCount) << (_totalCount % 16), b);
+        //    return returnVal;
+        //}
 
-        /*
-         * To reset the classes, and handle any other operations when invoked.
-         */
-        public void reset()
-        {
-            _totalCount = 0;
-            _levelCount = 0;
-            _currentLevel = 0;
-            _progress = 0;
-        }
+        //public string modCh(int c, int b)
+        //{
+        //    string returnVal = Convert.ToString(((c + _levelCount) << (_totalCount % 16)) % _currentMod, b);
+        //    if (returnVal.Length == 1) returnVal = "0" + returnVal;
+        //    return returnVal;
+        //}
+
+       
     }
 }
