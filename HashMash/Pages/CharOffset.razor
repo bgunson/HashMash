@@ -1,0 +1,17 @@
+﻿@page "/char-offset"
+
+
+<div class="container">
+    <h3>Character Offset</h3>
+
+    <p>
+        A character offset is a way of adding an initial bit of randomness into the message before it gets hashed fully. It works by taking the ASCII encoding of each character of the message, and adding the offset number to it (as ASCII encodings are just 2-digit hexadecimal numbers). For example, the message "hello",
+        when bit shifted by 2, reads as "jgnnq", which doesn't bear much resemblance to the original message. However, this is a pretty rudementary technique, and can be reversed rather easilly, so it should never be
+        all you do when trying to make a hash function.
+    </p>
+</div>
+
+
+@code {
+
+}
