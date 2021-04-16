@@ -1,9 +1,43 @@
 ﻿@page "/whatishashing"
 
-<h3>What is Hashing?</h3>
-<img src="images/ascii_table_lge.png" height="50%" width="50%"/>
+<div class="container">
+    <h3>What is Hashing?</h3>
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/7/75/Binary_counter.gif" /> 
+    <p>
+        There are three main components to Hashing, the Key representing the original value/text, the Hash Function, a mathematical algorithm that converts one value into another, and the Hash Value (a.k.a Hash Digest, Hash Code, or simply Hash) that is the final converted value.
+    </p>
+
+    <p>
+        In general, Hashing is the process of applying a Hash Function to a Key to produce a Hash Value. More specifically, a Key can be thought of as a block of data, and when a Hash Function has applied, the block of data is converted into a Hash Value which is an indistinguishable, fixed-length string of characters (generally smaller in size than the original value). A critical feature of a good Hash Function is that two unique Keys do not produce the same Hash Value. If two unique Keys have the same Hash Value, it is called a Collision, and additional steps need to be conducted to evaluate that the two keys are unique. However, if two Keys are identical, they must produce the same Hash Value. Another essential factor incorporated in a good Hash Function is that a Hash Function is one-directional, meaning that Hash Value cannot be reverse engineered to produce the original Key.
+        So why use Hashing?
+        Hashing can be used to reduce the amount of work needed to authenticate if two files are identical. Instead of thoroughly evaluating two files, you can apply a Hash Function to each file which will produce Hash Values that are shorter and easier to compare.  If the Hash Values are identical, then you know that the files are too.
+        Hashing can also be used as a way to store a list of information such as passwords. When logging into a website, your password can be computed into a Hash Value by a Hash Function and then stored into an index. Every time you enter your password, the Hash Value produced will be compared to the stored Hash Value on the website to validate your password. Using the Hash Function to convert passwords to Hash Values allows users to feel more secure knowing that their actual password is not recorded or saved. Also, in the unfortunate event that a website's database that stores password Hash Values gets compromised, the integrity of your actual password is not compromised because the Hash Value of your password cannot be reverted to your original password.
+
+    </p>
+
+    <hr />
+
+    <h6>Sources</h6>
+    <ul>
+        <li>
+            <a href="https://searchsqlserver.techtarget.com/definition/hashing#:~:text=Hashing%20is%20the%20transformation%20of,it%20using%20the%20original%20value.">
+                https://searchsqlserver.techtarget.com/definition/hashing#:~:text=Hashing%20is%20the%20transformation%20of,it%20using%20the%20original%20value.
+            </a>
+        </li>
+        <li>
+            <a href="https://www.educative.io/edpresso/what-is-hashing">
+                https://www.educative.io/edpresso/what-is-hashing
+            </a>
+        </li>
+        <li>
+            <a href="https://www.2brightsparks.com/resources/articles/introduction-to-hashing-and-its-uses.html">
+                https://www.2brightsparks.com/resources/articles/introduction-to-hashing-and-its-uses.html
+            </a>
+        </li>
+
+    </ul>
+</div>
+
 
 @code {
 
