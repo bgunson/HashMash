@@ -198,7 +198,7 @@
     // Store the state to session storage
     public async void storeState()
     {
-
+        validations.ValidateAll();
         string serialized = JsonSerializer.Serialize(this);
         await sessionStorage.SetItemAsync<string>("masher", serialized);
 
