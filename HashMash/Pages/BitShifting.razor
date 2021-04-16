@@ -1,7 +1,30 @@
 ﻿@page "/bit-shifting"
 
-<h3>Bit Shifting</h3>
+<div class="container">
+    <h3>Bit Shifting</h3>
 
+    <p>
+        Bit shifting is a way of changing the ASCII encoding of the message to make it seem even more random, by moving the bits that make up each ASCII character over. 
+        There are two ways to bit shift, either by moving each bit to the left, or to the right. Take for example the ASCII encoding of the character "I", which is 01001001 in binary, or 49 in hexadecimal. 
+        When left shifted by 1, that character becomes "10010010", which isn't even on the ASCII table! In hexadecimal, it is now 92. This greatly changes the value of the characters in the message and makes them that much harder to decipher. 
+        This process, however, still isn't enough on its own to make a good hashing algorithm.
+    </p>
+
+    <div class="row justify-content-center">
+        <img src="images/bitshift.png" style="height:50%;width:50%" />
+    </div>
+
+    <hr />
+
+    <h6>Sources</h6>
+    <div class="col-lg">
+        <ul>
+            <li>
+                Picture - <a href="https://docs.swift.org/swift-book/LanguageGuide/AdvancedOperators.html">https://docs.swift.org/swift-book/LanguageGuide/AdvancedOperators.html</a>
+            </li>
+        </ul>
+    </div>
+</div>
 @code {
 
 }
