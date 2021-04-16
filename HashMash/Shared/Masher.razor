@@ -36,7 +36,7 @@
                     <form @oninput="storeState">
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" @bind="charOffsetEnabled" @oninput="(EventArgs) => { charOffsetEnabled = (bool)EventArgs.Value; }" id="charOffsetCheckbox">
-                            <label class="form-check-label" for="charOffsetCheckbox"><Tooltip Text="This is what an offset on a character does">Character Offset</Tooltip></label>
+                            <label class="form-check-label" for="charOffsetCheckbox"><Tooltip Text="This is what an offset on a character does"><a href="representing-letters" class="stretched-link">Character Offset</a></Tooltip></label>
                             <span style="float: right">@charOffset</span>
                         </div>
                         <input type="range" name="charOffsetRange" class="form-range" @bind="charOffset" @oninput="(EventArgs) => { charOffset = Int32.Parse(EventArgs.Value.ToString()); }" min="0" max="128" step="1">
