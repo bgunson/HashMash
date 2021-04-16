@@ -54,6 +54,7 @@
                             <input class="form-check-input" type="checkbox" @bind="modNEnabled" @oninput="(EventArgs) => { modNEnabled = (bool)EventArgs.Value; }" id="modNRange">
                             <label class="form-check-label" for="modNRange"><Tooltip Text="Click for more info!"><a href="modular-arithmetic">Mod <i>n</i></a></Tooltip></label>
                             <span style="float: right">@modN</span>
+
                         </div>
                         <input type="range" class="form-range" @bind="modN" @oninput="(EventArgs) => { modN = Int32.Parse(EventArgs.Value.ToString()); }"  min="1" max="256" step="1">
 
